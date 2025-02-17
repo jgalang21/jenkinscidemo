@@ -3,7 +3,7 @@ pipeline {
  stages {
     stage('Clone Repository'){
         steps{
-            git branch: 'main', url: 'https://github.com/jgalang21/jenkinscidemo.git', c
+            git branch: 'main', url: 'https://github.com/jgalang21/jenkinscidemo.git'
         }
     }
     stage('Build Docker Image') {
