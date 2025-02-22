@@ -12,13 +12,15 @@ pipeline {
                     // Build the Docker image up to the 'build' stage
                     sh 'docker build --target build -t datajeremy/jenkinsci-demo-build .'
 
-                    // Run a container from the build stage to copy artifacts
+                    // Ensure directories exist and copy artifacts
                     sh '''
-                        # Remove any existing container with the same name
+                        # Clean up any existing container
                         docker rm -f build-container || true
                         docker create --name build-container datajeremy/jenkinsci-demo-build
+                        mkdir -p /var/jenkins_home/workspace/DockerBuilder/test-coverage
+                        mkdir -p /var/jenkins_home/workspace/DockerBuilder/test-reports
                         docker cp build-container:/my-react-app/test-coverage /var/jenkins_home/workspace/DockerBuilder/test-coverage
-                        docker cp build-container:/my-react-app/test-reports /var/jenkins_home/workspace/DockerBuilder/test-reports
+                        docker cp build-container:/my-react-app/test-reports/junit.xml /var/jenkins_home/workspace/DockerBuilder/test-reports/junit.xml
                         docker rm build-container
                     '''
                 }
