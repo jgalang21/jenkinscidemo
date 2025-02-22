@@ -14,6 +14,8 @@ pipeline {
 
                     // Run a container from the build stage to copy artifacts
                     sh '''
+                        # Remove any existing container with the same name
+                        docker rm -f build-container || true
                         docker create --name build-container datajeremy/jenkinsci-demo-build
                         docker cp build-container:/my-react-app/test-coverage /var/jenkins_home/workspace/DockerBuilder/test-coverage
                         docker cp build-container:/my-react-app/test-reports /var/jenkins_home/workspace/DockerBuilder/test-reports
