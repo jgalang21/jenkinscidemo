@@ -13,6 +13,10 @@ RUN npm install
 
 COPY . . 
 
+RUN mkdir -p /react-app/test-reports
+
+RUN npm run test --coverage --coverageDirectory=react-app/test-coverage --watchAll=false
+
 #build the app
 RUN npm run build 
 

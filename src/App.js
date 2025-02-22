@@ -2,6 +2,11 @@ import logo from './logo.svg';
 import './App.css';
 
 function App() {
+
+  const handleClick = () => {
+    console.log('button clicked');
+  };
+
   return (
     <div className="App">
       <header className="App-header">
@@ -17,6 +22,8 @@ function App() {
         >
           Learn Docker
         </a>
+
+        <button onClick={handleClick}>Click me</button>
       </header>
     </div>
   );
