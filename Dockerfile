@@ -1,30 +1,32 @@
-#base image
+# Base image
 FROM node as build
 
-#the working directory we want to store our app in
+# The working directory we want to store our app in
 WORKDIR /my-react-app
 
-#copy all the package*.json files
+# Copy all the package*.json files
 COPY package*.json .
 
-
-#install said dependencies
+# Install said dependencies
 RUN npm install 
 
+# Copy the rest of the app
 COPY . . 
 
-RUN mkdir -p /react-app/test-reports
+# Create coverage directory (adjusted path)
+RUN mkdir -p /my-react-app/test-coverage
 
-RUN npm run test --coverage --coverageDirectory=react-app/test-coverage --watchAll=false
+# Run tests with corrected flags
+RUN npm run test -- --coverage --coverageDirectory=/my-react-app/test-coverage --watchAll=false
 
-#build the app
+# Build the app
 RUN npm run build 
 
-#base images
+# Base image for production
 FROM nginx
 
-#copy that configuration file and then put it in the default location ON the container
+# Copy that configuration file and then put it in the default location ON the container
 COPY ./nginx/nginx.conf /etc/nginx/nginx.conf
 
-#grab the prod build and put it in the nginx html destination
+# Grab the prod build and put it in the nginx html destination
 COPY --from=build /my-react-app/build /usr/share/nginx/html
