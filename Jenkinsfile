@@ -9,20 +9,16 @@ pipeline {
         stage('Build Docker Image and Run Tests') {
             steps {
                 script {
-                    // Build the Docker image
+                    // Build the Docker image up to the 'build' stage
                     sh 'docker build --target build -t datajeremy/jenkinsci-demo-build .'
 
-                    // Run the test command and copy the junit.xml to the test-reports folder
+                    // Run a container from the build stage to copy artifacts
                     sh '''
-                        docker run --name build-container datajeremy/jenkinsci-demo-build bash -c "npm run test -- --coverage --coverageDirectory=/react-app/test-coverage --reporters=default --reporters=jest-junit --watchAll=false && cp /react-app/junit.xml /react-app/test-reports/"
+                        docker create --name build-container datajeremy/jenkinsci-demo-build
+                        docker cp build-container:/my-react-app/test-coverage /var/jenkins_home/workspace/DockerBuilder/test-coverage
+                        docker cp build-container:/my-react-app/test-reports /var/jenkins_home/workspace/DockerBuilder/test-reports
+                        docker rm build-container
                     '''
-                    
-                    // Copy the test coverage and report files to the Jenkins workspace
-                    sh 'docker cp build-container:/react-app/test-coverage /var/jenkins_home/workspace/DockerBuilder/'
-                    sh 'docker cp build-container:/react-app/test-reports /var/jenkins_home/workspace/DockerBuilder/'
-                                        
-                    // Clean up the container
-                    sh 'docker rm build-container'
                 }
             }
         }

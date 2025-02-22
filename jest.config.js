@@ -1,12 +1,12 @@
 module.exports = {
     collectCoverage: true,
-    coverageDirectory: "/react-app/test-coverage",  // Absolute path for coverage
+    coverageDirectory: "/my-react-app/test-coverage",  // Fixed to match WORKDIR
     reporters: [
         "default",
         [
             "jest-junit",
             {
-                outputDirectory: "/react-app/test-reports",  // Absolute path for junit output
+                outputDirectory: "/my-react-app/test-reports",  // Already correct
                 outputName: "junit.xml"
             }
         ]

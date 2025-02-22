@@ -10,14 +10,15 @@ COPY package*.json .
 # Install said dependencies
 RUN npm install 
 
-# Copy the rest of the app
+# Copy the rest of the app (including jest.config.js)
 COPY . . 
 
-# Create coverage directory (adjusted path)
+# Create coverage and reports directories
 RUN mkdir -p /my-react-app/test-coverage
+RUN mkdir -p /my-react-app/test-reports
 
-# Run tests with corrected flags
-RUN npm run test -- --coverage --coverageDirectory=/my-react-app/test-coverage --watchAll=false
+# Run tests with Jest config handling coverage and reporters
+RUN npm run test -- --watchAll=false
 
 # Build the app
 RUN npm run build 
